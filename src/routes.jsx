@@ -12,7 +12,7 @@ import { Demo } from "./pages/Demo";
 
 // Import your contact app pages here
 import ContactListPage from "./pages/ContactListPage";
-import ContactDetailPage from "./pages/ContactDetailPage";
+import ContactDetailPage from "./pages/ContactDetailsPage";
 import AddContactPage from "./pages/AddContactPage";
 import EditContactPage from "./pages/EditContactPage";
 
@@ -23,6 +23,9 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
+
+      {/* Add standalone /add route */}
+      <Route path="/add" element={<AddContactPage />} />
 
       {/* Contact app routes */}
       <Route path="/contacts" element={<ContactListPage />} />

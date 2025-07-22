@@ -18,9 +18,9 @@ export default function ContactListPage() {
     c.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // On select contact, update query param
+  // On select contact, update route to contact detail page
   function handleSelect(id) {
-    navigate(`/?selected=${id}`);
+    navigate(`/contacts/contact/${id}`);
   }
 
   return (
@@ -38,7 +38,7 @@ export default function ContactListPage() {
           selectedId={selectedIdNum}
           onSelect={handleSelect}
         />
-        <Link to="/add" style={styles.addButton}>
+        <Link to="/contacts/add" style={styles.addButton}>
           + Add New Contact
         </Link>
       </div>

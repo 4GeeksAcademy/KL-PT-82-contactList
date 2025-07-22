@@ -13,6 +13,8 @@ export default function AddContactPage() {
   }
 
   return (
-    <ContactForm onSave={handleSave} onCancel={() => navigate("/")} />
+    <div style={{ marginLeft: '4px' }}>
+      <ContactForm onSave={handleSave} onCancel={() => navigate("/")} />
+    </div>
   );
 }

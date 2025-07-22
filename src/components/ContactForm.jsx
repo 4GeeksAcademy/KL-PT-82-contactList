@@ -28,36 +28,43 @@ export default function ContactForm({ contact, onSave, onCancel }) {
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
       <h2>{contact ? "Edit Contact" : "Add New Contact"}</h2>
-      <label style={styles.label}>
+
+      <label htmlFor="name" style={styles.label}>
         Name:
-        <input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          style={styles.input}
-          required
-        />
       </label>
-      <label style={styles.label}>
+      <input
+        id="name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        style={styles.input}
+        required
+      />
+
+      <label htmlFor="phone" style={styles.label}>
         Phone:
-        <input
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          style={styles.input}
-          type="tel"
-        />
       </label>
-      <label style={styles.label}>
+      <input
+        id="phone"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        style={styles.input}
+        type="tel"
+      />
+
+      <label htmlFor="email" style={styles.label}>
         Email:
-        <input
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          style={styles.input}
-          type="email"
-        />
       </label>
+      <input
+        id="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        style={styles.input}
+        type="email"
+      />
+
       <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
         <button type="submit" style={styles.saveButton}>
           Save
@@ -73,7 +80,7 @@ export default function ContactForm({ contact, onSave, onCancel }) {
 const styles = {
   label: {
     display: "block",
-    marginBottom: 10,
+    marginBottom: 5,
     fontWeight: "600",
   },
   input: {
@@ -82,7 +89,7 @@ const styles = {
     fontSize: 16,
     borderRadius: 4,
     border: "1px solid #ccc",
-    marginTop: 4,
+    marginBottom: 15,
     boxSizing: "border-box",
   },
   saveButton: {
