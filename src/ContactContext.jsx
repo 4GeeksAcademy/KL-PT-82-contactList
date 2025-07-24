@@ -15,7 +15,7 @@ export function ContactProvider({ children }) {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://playground.4geeks.com/apis/fake/contact/agenda/${AGENDA_SLUG}`
+          `'https://playground.4geeks.com/todo/todos/kelvinL'${AGENDA_SLUG}`
         );
         if (!res.ok) throw new Error("Failed to fetch contacts");
         const data = await res.json();
