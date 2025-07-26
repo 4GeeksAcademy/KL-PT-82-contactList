@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer"
 
 export const Home = () => {
-  const [contacts, setContacts] = useState([]);
+  const {store, dispatch} = useGlobalReducer()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,23 +24,35 @@ export const Home = () => {
         }
 
         const data = await res.json();
-
-        if (Array.isArray(data)) {
-          setContacts(data);
-        } else if (data.contacts && Array.isArray(data.contacts)) {
-          // Just in case API wraps contacts in an object
-          setContacts(data.contacts);
-        } else {
-          setContacts([]);
-        }
+        dispatch({type:"set_contacts",payload:data.contacts})
+        
       } catch (err) {
         setError(err.message);
-        setContacts([]);
+
       } finally {
         setLoading(false);
       }
     };
 
+const createAgenda = async() => {
+try {
+        const res = await fetch(
+          `https://playground.4geeks.com/contact/agendas/${agendaSlug}/`,{
+            method: "POST",
+            headers: {
+              "Content-Type":"application/json"
+            },
+          }
+        );
+        console.log(res)
+        return res.ok
+      } catch (err) {
+        setError(err.message);
+      }
+}
+
+
+createAgenda()
     fetchContacts();
   }, []);
 
@@ -57,10 +70,10 @@ export const Home = () => {
 
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      {!loading && !error && contacts.length === 0 && <p>No contacts found.</p>}
+      {!loading && !error && store.contacts.length === 0 && <p>No contacts found.</p>}
 
       <ul className="list-unstyled">
-        {contacts.map((contact) => (
+        {store.contacts.map((contact) => (
           <li key={contact.id}>
             <strong>{contact.full_name || contact.name || "No Name"}</strong> — {contact.email}
           </li>

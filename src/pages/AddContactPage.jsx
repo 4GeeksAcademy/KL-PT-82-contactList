@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useContacts } from "../ContactContext";
 import ContactForm from "../components/ContactForm";
+import AddContactForm from "../components/AddContactForm";
 
 export default function AddContactPage() {
   const { addContact } = useContacts();
@@ -14,7 +15,7 @@ export default function AddContactPage() {
 
   return (
     <div style={{ marginLeft: '4px' }}>
-      <ContactForm onSave={handleSave} onCancel={() => navigate("/")} />
+      <AddContactForm onSave={handleSave} onCancel={() => navigate("/")} />
     </div>
   );
 }
