@@ -1,11 +1,10 @@
 import React from "react";
 
-const AGENDA_SLUG = "kelvinL";
-const API_BASE_URL = "https://playground.4geeks.com/apis/fake/contact";
+const API_BASE_URL = "https://playground.4geeks.com/contact/agendas/kelvinL/contacts";
 
-const AddContactForm = ({ onContactAdded }) => {
+const AddContactForm = () => {
   const [form, setForm] = React.useState({
-    full_name: "",
+    name: "",
     email: "",
     phone: "",
     address: ""
@@ -21,7 +20,7 @@ const AddContactForm = ({ onContactAdded }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.full_name.trim()) {
+    if (!form.name.trim()) {
       alert("Full Name is required");
       return;
     }
@@ -38,15 +37,15 @@ const AddContactForm = ({ onContactAdded }) => {
       return;
     }
 
-    const contactData = {
-      ...form,
-      agenda_slug: AGENDA_SLUG,
-    };
+    // const contactData = {
+    //   ...form,
+    //   agenda_slug: AGENDA_SLUG,
+    // };
 
     fetch(API_BASE_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contactData),
+      body: JSON.stringify({...form}),
     })
       .then((res) => {
         if (!res.ok) throw new Error(`API error ${res.status}`);
@@ -54,8 +53,8 @@ const AddContactForm = ({ onContactAdded }) => {
       })
       .then((data) => {
         alert("Contact added!");
-        onContactAdded();
-        setForm({ full_name: "", email: "", phone: "", address: "" });
+        
+        setForm({ name: "", email: "", phone: "", address: "" });
       })
       .catch((err) => {
         console.error("Failed to add contact:", err);
@@ -67,9 +66,9 @@ const AddContactForm = ({ onContactAdded }) => {
     <form onSubmit={handleSubmit} autoComplete="on" className="space-y-2">
       <input
         type="text"
-        name="full_name"
-        placeholder="Full Name"
-        value={form.full_name}
+        name="name"
+        placeholder="Name"
+        value={form.name}
         onChange={handleChange}
         autoComplete="name"
         required

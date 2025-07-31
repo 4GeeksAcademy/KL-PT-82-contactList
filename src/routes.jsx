@@ -30,7 +30,7 @@ export const router = createBrowserRouter(
       {/* Contact app routes */}
       <Route path="/contacts" element={<ContactListPage />} />
       <Route path="/contacts/contact/:id" element={<ContactDetailPage />} />
-      <Route path="/contacts/add" element={<AddContactPage />} />
+      {/* <Route path="/contacts/add" element={<AddContactPage />} /> */}
       <Route path="/contacts/edit/:id" element={<EditContactPage />} />
     </Route>
   )
