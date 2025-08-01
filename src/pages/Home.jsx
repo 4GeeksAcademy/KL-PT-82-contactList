@@ -3,58 +3,80 @@ import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer"
 
 export const Home = () => {
-  const {store, dispatch} = useGlobalReducer()
+  const { store, dispatch } = useGlobalReducer()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const agendaSlug = "kelvinL";
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      setLoading(true);
-      setError(null);
+  const fetchContacts = async () => {
+    setLoading(true);
+    setError(null);
 
+    try {
+      const res = await fetch(
+        `https://playground.4geeks.com/contact/agendas/${agendaSlug}/contacts`
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch contacts: ${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      dispatch({ type: "set_contacts", payload: data.contacts })
+
+    } catch (err) {
+      setError(err.message);
+
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchContacts()
+
+    const createAgenda = async () => {
       try {
         const res = await fetch(
-          `https://playground.4geeks.com/contact/agendas/${agendaSlug}/contacts`
-        );
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch contacts: ${res.status} ${res.statusText}`);
-        }
-
-        const data = await res.json();
-        dispatch({type:"set_contacts",payload:data.contacts})
-        
-      } catch (err) {
-        setError(err.message);
-
-      } finally {
-        setLoading(false);
-      }
-    };
-
-const createAgenda = async() => {
-try {
-        const res = await fetch(
-          `https://playground.4geeks.com/contact/agendas/${agendaSlug}/`,{
+          `https://playground.4geeks.com/contact/agendas/${agendaSlug}/`,
+          {
             method: "POST",
             headers: {
-              "Content-Type":"application/json"
+              "Content-Type": "application/json"
             },
           }
         );
-        console.log(res)
-        return res.ok
+        console.log(res);
+        return res.ok;
       } catch (err) {
         setError(err.message);
       }
-}
+    };
 
 
-createAgenda()
+
+    createAgenda()
     fetchContacts();
   }, []);
+
+  const deleteContact = async (contactID) => {
+    try {
+      const res = await fetch(
+        `https://playground.4geeks.com/contact/agendas/kelvinL/contacts/${contactID}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+        }
+      );
+      console.log(res);
+      fetchContacts()
+      return res.ok;
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
     <div className="text-center mt-5" style={styles.container}>
@@ -75,7 +97,9 @@ createAgenda()
       <ul className="list-unstyled">
         {store.contacts.map((contact) => (
           <li key={contact.id}>
-            <strong>{contact.full_name || contact.name || "No Name"}</strong> — {contact.email}
+            <strong>{contact.name || "No Name"}</strong> — {contact.email}
+            <button className="btn btn-danger" onClick={() => deleteContact(contact.id)}></button>
+            <Link className= "btn btn-primary" to = {"/contacts/edit/" + contact.id}></Link>
           </li>
         ))}
       </ul>

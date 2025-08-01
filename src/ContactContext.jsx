@@ -61,7 +61,7 @@ export function ContactProvider({ children }) {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://playground.4geeks.com/apis/fake/contact/${id}`,
+        `https://playground.4geeks.com/contact/agendas/kelvinL/contacts/${id}/`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
