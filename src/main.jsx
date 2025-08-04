@@ -4,15 +4,12 @@ import './index.css';
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import { StoreProvider } from './hooks/useGlobalReducer';
-import { ContactProvider } from './ContactContext';
 
 const Main = () => {
     return (
         <React.StrictMode>
             <StoreProvider>
-                <ContactProvider>
-                    <RouterProvider router={router} />
-                </ContactProvider>
+                <RouterProvider router={router} />
             </StoreProvider>
         </React.StrictMode>
     );

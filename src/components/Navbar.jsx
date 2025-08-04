@@ -28,14 +28,6 @@ export const Navbar = () => {
 							Home
 						</NavLink>
 						<NavLink
-							to="/contacts"
-							className={({ isActive }) =>
-								"nav-link" + (isActive ? " active" : "")
-							}
-						>
-							Contacts
-						</NavLink>
-						<NavLink
 							to="/add"
 							className={({ isActive }) =>
 								"nav-link" + (isActive ? " active" : "")

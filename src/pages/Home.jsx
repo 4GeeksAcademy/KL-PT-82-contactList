@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useGlobalReducer from "../hooks/useGlobalReducer"
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Home = () => {
-  const { store, dispatch } = useGlobalReducer()
+  const { store, dispatch } = useGlobalReducer();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const agendaSlug = "kelvinL";
 
   const fetchContacts = async () => {
@@ -17,23 +16,18 @@ export const Home = () => {
       const res = await fetch(
         `https://playground.4geeks.com/contact/agendas/${agendaSlug}/contacts`
       );
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch contacts: ${res.status} ${res.statusText}`);
-      }
-
+      if (!res.ok) throw new Error(`Failed to fetch contacts: ${res.status} ${res.statusText}`);
       const data = await res.json();
-      dispatch({ type: "set_contacts", payload: data.contacts })
-
+      dispatch({ type: "set_contacts", payload: data.contacts });
     } catch (err) {
       setError(err.message);
-
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    fetchContacts()
+    fetchContacts();
 
     const createAgenda = async () => {
       try {
@@ -53,16 +47,14 @@ export const Home = () => {
       }
     };
 
-
-
-    createAgenda()
+    createAgenda();
     fetchContacts();
   }, []);
 
   const deleteContact = async (contactID) => {
     try {
       const res = await fetch(
-        `https://playground.4geeks.com/contact/agendas/kelvinL/contacts/${contactID}`,
+        `https://playground.4geeks.com/contact/agendas/${agendaSlug}/contacts/${contactID}`,
         {
           method: "DELETE",
           headers: {
@@ -71,54 +63,46 @@ export const Home = () => {
         }
       );
       console.log(res);
-      fetchContacts()
+      fetchContacts();
       return res.ok;
     } catch (err) {
       setError(err.message);
     }
-  }
+  };
 
   return (
-    <div className="text-center mt-5" style={styles.container}>
-      <p style={styles.subtitle}>Manage your contacts smarter and faster.</p>
+    <div className="container py-5">
+      <div className="text-center mb-5">
+        <p className="lead">Manage your contacts smarter and faster.</p>
+        <h2>Your Contacts</h2>
+      </div>
 
-      <Link to="/contacts" className="btn btn-primary" style={styles.button}>
-        Go to Contacts
-      </Link>
+      {loading && <div className="text-center"><p>Loading contacts...</p></div>}
+      {error && <div className="alert alert-danger text-center">Error: {error}</div>}
+      {!loading && !error && store.contacts.length === 0 && (
+        <div className="text-center">
+          <p>No contacts found.</p>
+        </div>
+      )}
 
-      <h2 className="mt-5">Your Contacts</h2>
-
-      {loading && <p>Loading contacts...</p>}
-
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-
-      {!loading && !error && store.contacts.length === 0 && <p>No contacts found.</p>}
-
-      <ul className="list-unstyled">
+      <div className="row">
         {store.contacts.map((contact) => (
-          <li key={contact.id}>
-            <strong>{contact.name || "No Name"}</strong> — {contact.email}
-            <button className="btn btn-danger" onClick={() => deleteContact(contact.id)}></button>
-            <Link className= "btn btn-primary" to = {"/contacts/edit/" + contact.id}></Link>
-          </li>
+          <div key={contact.id} className="col-md-6 col-lg-4 mb-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title text-center">{contact.name || "No Name"}</h5>
+                <p className="card-text"><strong>Email:</strong> {contact.email}</p>
+                <p className="card-text"><strong>Phone:</strong> {contact.phone}</p>
+                <p className="card-text"><strong>Address:</strong> {contact.address}</p>
+              </div>
+              <div className="card-footer d-flex justify-content-between">
+                <button className="btn btn-danger btn-sm" onClick={() => deleteContact(contact.id)}>Delete</button>
+                <Link className="btn btn-primary btn-sm" to={`/edit/${contact.id}`}>Edit</Link>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: 600,
-    margin: "0 auto",
-    padding: 20,
-  },
-  subtitle: {
-    fontSize: "1.25rem",
-    marginBottom: 30,
-  },
-  button: {
-    fontSize: "1.25rem",
-    padding: "12px 30px",
-  },
 };

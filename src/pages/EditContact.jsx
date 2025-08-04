@@ -1,10 +1,18 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 const API_BASE_URL = "https://playground.4geeks.com/contact/agendas/kelvinL/contacts";
 
-export default function AddContactPage() {
+export default function EditContact() {
   const navigate = useNavigate();
+  const { contactId } = useParams()
+  const id = Number(contactId);
+
+
+  const { store } = useGlobalReducer();
+  const contact = store.contacts.find(c => c.id === id);
+
 
   const [form, setForm] = React.useState({
     name: "",
@@ -12,6 +20,21 @@ export default function AddContactPage() {
     phone: "",
     address: ""
   });
+
+  useEffect(() => {
+    const fetchContact = async () => {
+
+      if (contact) {
+        setForm({
+          name: contact.name,  // or contact.name if your API uses that
+          email: contact.email,
+          phone: contact.phone,
+          address: contact.address
+        });
+      }
+    }
+    fetchContact()
+  }, [])
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,8 +71,8 @@ export default function AddContactPage() {
       agenda_slug: "kelvinL"
     };
 
-    fetch(API_BASE_URL, {
-      method: "POST",
+    fetch(`https://playground.4geeks.com/contact/agendas/kelvinL/contacts/${contactId}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contactData),
     })
@@ -58,7 +81,7 @@ export default function AddContactPage() {
         return res.json();
       })
       .then((data) => {
-        alert("Contact added!");
+        alert("Edit Successful!");
         setForm({ name: "", email: "", phone: "", address: "" });
         navigate("/");
       })
